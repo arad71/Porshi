@@ -33,6 +33,11 @@ a{color:inherit}
 .band{padding:clamp(48px,7vw,104px) max(5vw,16px)}
 .lede{font-size:19px;color:var(--soft);max-width:62ch}
 
+/* under-development notice */
+.dev{background:var(--marigold);color:#16175a;text-align:center;font-size:15px;font-weight:600;padding:8px max(5vw,16px);line-height:1.4}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+button[disabled]{opacity:.6;cursor:wait}
+
 /* nav */
 header{position:sticky;top:0;z-index:10;background:var(--deep);color:var(--cotton)}
 .nav{display:flex;flex-wrap:wrap;align-items:center;gap:8px 28px;padding:12px max(5vw,16px);max-width:1240px;margin:0 auto}
@@ -192,6 +197,7 @@ footer .logo{font-size:36px;color:#fff}
   <path d="M18.5 37V42M45.5 37V42M3 42H61" fill="none" stroke="#e8343d" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
   <g fill="#e8343d"><circle cx="3" cy="42" r="2.8"/><circle cx="61" cy="42" r="2.8"/><circle cx="18.5" cy="42" r="2"/><circle cx="45.5" cy="42" r="2"/></g>
 </symbol></svg>
+<div class="dev" role="note">This website is under development. Some details may change.</div>
 <header>
   <div class="nav">
     <a class="logo brand" href="#top" aria-label="Porshi Tech home"><svg aria-hidden="true"><use href="#mk"/></svg><span>porshi<i>.tech</i></span></a>
@@ -345,7 +351,7 @@ footer .logo{font-size:36px;color:#fff}
       <h2 id="ch">Pop over for a chat</h2>
       <p class="lede" style="margin-top:16px">Tell us what’s bugging you or what you want to build. We’ll reply within one business day with a straight answer, even if that answer is “you don’t need us for this.”</p>
       <div class="reach">
-        <div><b>Email</b><a href="mailto:hello@porshi.tech">hello@porshi.tech</a></div>
+        <div><b>Email</b><a href="mailto:contact@porshi.tech">contact@porshi.tech</a></div>
         <div><b>Website</b>porshi.tech</div>
         <div><b>Based in</b>Perth, Western Australia</div>
         <div><b>Hours</b>Monday to Friday, 8am to 6pm AWST, with flexible hours for other time zones</div>
@@ -365,9 +371,10 @@ footer .logo{font-size:36px;color:#fff}
       </label>
       <label>Tell us a bit more<textarea id="f-msg" name="message" required placeholder="What’s the problem, and what would “fixed” look like?"></textarea></label>
       <p class="err" id="err" role="alert"></p>
-      <button class="btn red" type="submit">Send message</button>
+      <button class="btn red" type="submit" id="send">Send message</button>
       <div class="done" id="done" role="status"></div>
-      <p class="note">Preview only: this form checks your details but isn’t connected to an inbox yet.</p>
+      <input type="text" name="_honey" id="f-honey" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
+      <p class="note">Prefer email? Write to contact@porshi.tech.</p>
     </form>
   </div>
 </section>
@@ -377,7 +384,7 @@ footer .logo{font-size:36px;color:#fff}
   <div class="wrap">
     <span class="logo"><svg aria-hidden="true"><use href="#mk"/></svg><span>porshi<i>.tech</i></span></span>
     <p style="margin:0">Your neighbours in tech, based in Perth: software, data, AI and IT services for businesses everywhere</p>
-    <p style="margin:0">© <span id="yr"></span> Porshi Tech</p>
+    <p style="margin:0">© <span id="yr"></span> Porshi Tech. Site under development.</p>
   </div>
 </footer>
 
@@ -458,15 +465,28 @@ const form=document.getElementById('form'),err=document.getElementById('err'),do
 let draft={};try{draft=JSON.parse(localStorage.getItem('porshi-draft')||'{}')}catch(e){}
 for(const el of form.elements){if(el.name&&draft[el.name])el.value=draft[el.name]}
 form.addEventListener('input',()=>{const d={};for(const el of form.elements)if(el.name)d[el.name]=el.value;try{localStorage.setItem('porshi-draft',JSON.stringify(d))}catch(e){}});
-form.addEventListener('submit',e=>{
+/* Contact form: messages are delivered by FormSubmit to the inbox below */
+const FORM_ENDPOINT='https://formsubmit.co/ajax/zahur.dhaka@gmail.com';
+const send=document.getElementById('send');
+form.addEventListener('submit',async e=>{
   e.preventDefault();
   const $=id=>document.getElementById(id);const n=$('f-name').value.trim(),m=$('f-email').value.trim(),t=$('f-msg').value.trim();
   const miss=[];if(!n)miss.push('your name');if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m))miss.push('a valid email');if(!t)miss.push('a short message');
   if(miss.length){err.textContent='Please add '+miss.join(', ')+'.';(!n?$('f-name'):miss.includes('a valid email')?$('f-email'):$('f-msg')).focus();return}
-  err.textContent='';
-  done.style.display='block';
-  done.textContent='Thanks, '+n+'. Your message is ready to go. Once this form is connected, we’ll reply to '+m+' within one business day.';
-  try{localStorage.removeItem('porshi-draft')}catch(e){}
+  if($('f-honey').value)return;
+  err.textContent='';done.style.display='none';send.disabled=true;send.textContent='Sending…';
+  try{
+    const res=await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({
+      name:n,email:m,business:$('f-biz').value.trim(),phone:$('f-phone').value.trim(),topic:sel.value,message:t,
+      _subject:'porshi.tech enquiry: '+sel.value+' from '+n,_replyto:m,_template:'table',_captcha:'false'})});
+    const j=await res.json().catch(()=>({}));
+    if(!res.ok||String(j.success)==='false')throw new Error(j.message||'HTTP '+res.status);
+    done.style.display='block';
+    done.textContent='Thanks, '+n+'. Your message has been sent. We’ll reply to '+m+' within one business day.';
+    form.reset();try{localStorage.removeItem('porshi-draft')}catch(x){}
+  }catch(x){
+    err.textContent='Your message couldn’t be sent just now. Please try again, or email contact@porshi.tech directly.';
+  }finally{send.disabled=false;send.textContent='Send message'}
 });
 document.getElementById('prods').addEventListener('click',e=>{const a=e.target.closest('[data-topic]');if(a)sel.value=a.dataset.topic+' demo'});
 if(matchMedia('(prefers-reduced-motion: reduce)').matches)document.querySelector('.street').pauseAnimations();
