@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Porshi Tech</title>
+<meta name="description" content="Porshi Tech: software development, data engineering, analytics, AI and LLM work, and complete IT services. Based in Perth, Western Australia, working remotely with clients anywhere. Porshi means neighbour in Bangla.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: warm, plain-spoken, a neighbour who happens to be very good with computers
+   IDEA: nakshi kantha, the Bengali quilt where one running stitch of red thread joins every patch
+   PICTURE: an Australian street at dusk, lit windows joined by one red stitched thread
+   COLOUR and TYPE: indigo dye, white cotton, kantha red, marigold; Baloo Da 2 + Hind Siliguri (both Bangla + Latin)
+   LAYOUT: poster hero with the Bangla word huge, the street full-bleed under it, stitched dividers between bands */
+:root{color-scheme:light dark;
+  --bg:light-dark(#ffffff,#0f1033);--ink:light-dark(#1a1b3f,#eceefe);--soft:light-dark(#4a4c72,#b7badf);
+  --panel:light-dark(#f3f3fb,#181a4a);--line:light-dark(#dcdcef,#2c2f6a);
+  --indigo:#25277a;--deep:#16175a;--red:#d7262f;--marigold:#f4a51c;--cotton:#fff;
+  --redtext:light-dark(#c01f28,#ff7a80)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Hind Siliguri",system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:"Baloo Da 2","Hind Siliguri",sans-serif;line-height:1.05;text-wrap:balance;margin:0}
+h2{font-size:clamp(32px,4.4vw,48px);font-weight:800}
+h3{font-size:22px;font-weight:700;line-height:1.2}
+p{margin:0 0 1em}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--marigold);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1240px;margin:0 auto}
+.band{padding:clamp(48px,7vw,104px) max(5vw,16px)}
+.lede{font-size:19px;color:var(--soft);max-width:62ch}
+
+/* nav */
+header{position:sticky;top:0;z-index:10;background:var(--deep);color:var(--cotton)}
+.nav{display:flex;flex-wrap:wrap;align-items:center;gap:8px 28px;padding:12px max(5vw,16px);max-width:1240px;margin:0 auto}
+.logo{display:inline-flex;align-items:center;gap:.32em;text-decoration:none;color:inherit;font:800 1em/1 "Baloo Da 2",sans-serif;letter-spacing:-.01em}
+.logo svg{width:1.5em;height:1.22em;flex:none}
+.logo i{font-style:normal;font-weight:500;opacity:.7}
+.brand{font-size:26px}
+.nav nav{display:flex;flex-wrap:wrap;gap:4px 22px;margin-left:auto}
+.nav nav a{text-decoration:none;padding:10px 0;font-weight:500;opacity:.9}
+.nav nav a:hover{opacity:1;text-decoration:underline;text-decoration-color:var(--red);text-underline-offset:6px;text-decoration-thickness:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;border-radius:999px;border:0;font:700 17px "Baloo Da 2",sans-serif;text-decoration:none;cursor:pointer}
+.btn.red{background:var(--red);color:#fff}.btn.red:hover{background:#b81d25}
+.btn.line{background:transparent;color:inherit;box-shadow:inset 0 0 0 2px currentColor}
+.nav .btn{min-height:44px;padding:0 18px}
+.menu{display:none;width:44px;height:44px;border:0;border-radius:10px;background:transparent;color:#fff;cursor:pointer;padding:11px 10px;flex-direction:column;justify-content:space-between}
+.menu span{display:block;height:2.5px;border-radius:2px;background:currentColor;transition:transform .2s,opacity .2s}
+header.open .menu span:nth-child(1){transform:translateY(8.2px) rotate(45deg)}header.open .menu span:nth-child(2){opacity:0}header.open .menu span:nth-child(3){transform:translateY(-8.2px) rotate(-45deg)}
+
+/* hero */
+.hero{background:var(--indigo);color:var(--cotton);padding:clamp(36px,5vw,72px) max(5vw,16px) 0;position:relative;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:8px 48px;align-items:end}
+.mark{font-size:clamp(46px,6.2vw,84px);margin:0 0 24px}
+.meaning{font-size:18px;line-height:1.6;color:#e4e5ff;max-width:46ch;margin:0;padding-left:18px;border-left:4px dashed var(--red)}
+.meaning b{color:#fff;font-weight:600}
+.meaning em{font-style:normal;color:var(--marigold);font-weight:600}
+.hero h1{font-size:clamp(34px,4.6vw,52px);font-weight:800;margin-bottom:18px}
+.hero p.lede{color:#d7d9ff}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.street{display:block;width:calc(100% + 10vw);margin:28px -5vw 0;height:auto;max-height:420px}
+.thread{stroke-dasharray:14 10;animation:sew 3.2s ease-out both}
+@keyframes sew{from{stroke-dashoffset:900;opacity:.2}to{stroke-dashoffset:0;opacity:1}}
+@media(prefers-reduced-motion:reduce){.thread{animation:none}html{scroll-behavior:auto}}
+
+/* stitched divider */
+.stitch{height:6px;background:repeating-linear-gradient(90deg,var(--red) 0 16px,transparent 16px 26px);opacity:.9}
+
+/* services */
+.svc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:44px;border-top:2px solid var(--line)}
+.svc article{padding:28px 28px 32px 0;border-bottom:2px solid var(--line)}
+.svc article:not(:nth-child(3n+1)){padding-left:28px;border-left:2px dashed var(--line)}
+.svc svg{width:46px;height:46px;margin-bottom:14px}
+.svc h3{margin-bottom:10px}
+.svc p{color:var(--soft);font-size:16px;margin-bottom:12px}
+.svc ul{margin:0;padding:0;list-style:none;font-size:15px;display:flex;flex-wrap:wrap;gap:6px}
+.svc li{background:var(--panel);padding:3px 10px;border-radius:6px}
+
+/* products */
+.prods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:44px}
+.prod{display:grid;grid-template-rows:auto 1fr;border-radius:20px;overflow:hidden;background:var(--panel);border:2px solid var(--line)}
+.prod .shot{background:var(--indigo);padding:22px 22px 0;aspect-ratio:16/8.5;display:flex;align-items:flex-end}
+.prod .shot svg{width:100%;height:100%;display:block}
+.prod .body{padding:26px 28px 30px;display:flex;flex-direction:column;gap:12px}
+.prod .tag{font-size:14px;font-weight:600;color:var(--redtext)}
+.prod h3{font-size:28px;font-weight:800}
+.prod h3 small{display:block;font:500 16px/1.4 "Hind Siliguri",sans-serif;color:var(--soft);margin-top:6px}
+.prod p{color:var(--soft);margin:0}
+.prod ul{margin:4px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:16px}
+.prod li{padding-left:22px;position:relative}
+.prod li:before{content:"";position:absolute;left:0;top:.7em;width:12px;border-top:3px dashed var(--red)}
+.prod .go{margin-top:auto;padding-top:14px;display:flex;flex-wrap:wrap;gap:10px}
+.prod .btn.line{color:var(--ink)}
+@media(max-width:900px){.prods{grid-template-columns:minmax(0,1fr)}}
+
+/* neighbour */
+.nb{background:var(--panel)}
+.nb .wrap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:48px;align-items:start}
+.quote{font:700 clamp(26px,3vw,34px)/1.25 "Baloo Da 2",sans-serif;margin:22px 0 0;padding-left:22px;border-left:4px dashed var(--red)}
+.traits{display:grid;gap:26px}
+.traits>div{display:grid;grid-template-columns:48px minmax(0,1fr);gap:16px}
+.traits svg{width:48px;height:48px}
+.traits h3{margin-bottom:4px}
+.traits p{color:var(--soft);margin:0}
+
+/* process */
+.steps{list-style:none;padding:0;margin:44px 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;position:relative}
+.steps:before{content:"";position:absolute;top:27px;left:28px;right:28px;border-top:3px dashed var(--red)}
+.steps li{position:relative}
+.steps .n{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--indigo);color:#fff;font:800 24px "Baloo Da 2";margin-bottom:16px;box-shadow:0 0 0 6px var(--bg)}
+.steps p{color:var(--soft);font-size:16px;margin:6px 0 0}
+
+/* areas */
+.areas{background:var(--deep);color:var(--cotton)}
+.areas .wrap{max-width:1240px}
+.areas .lede{color:#cfd2ff}
+
+/* faq */
+.faq{max-width:820px;margin-top:32px}
+details{border-bottom:2px solid var(--line)}
+summary{cursor:pointer;padding:18px 0;font:700 20px/1.3 "Baloo Da 2",sans-serif;list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";color:var(--redtext);font-size:28px;line-height:.8}
+details[open] summary:after{content:"–"}
+details p{color:var(--soft);padding-bottom:10px}
+
+/* contact */
+.contact .wrap{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:48px}
+form{background:var(--panel);padding:clamp(20px,3vw,36px);border-radius:18px;display:grid;gap:16px;border:2px dashed var(--line)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+label{display:grid;gap:6px;font-weight:600;font-size:15px}
+input,select,textarea{font:16px "Hind Siliguri",sans-serif;padding:12px 14px;min-height:48px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--indigo);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--marigold) 60%,transparent)}
+textarea{min-height:130px;resize:vertical}
+.err{color:var(--redtext);font-size:14px;font-weight:500;min-height:1em}
+.done{display:none;padding:18px;border-radius:12px;background:var(--bg);border-left:4px solid var(--red)}
+.note{font-size:13px;color:var(--soft)}
+.reach{margin-top:28px;display:grid;gap:10px;font-size:17px}
+.reach b{display:block;font-size:14px;color:var(--soft);font-weight:500}
+
+footer{background:var(--deep);color:#cfd2ff;padding:40px max(5vw,16px)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:16px 40px;justify-content:space-between;align-items:center}
+footer .logo{font-size:36px;color:#fff}
+
+@media(max-width:900px){
+  .hero .wrap,.nb .wrap,.contact .wrap{grid-template-columns:minmax(0,1fr)}
+  .svc{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .svc article,.svc article:not(:nth-child(3n+1)){padding:24px 20px 28px 0;border-left:0}
+  .svc article:nth-child(even){padding-left:20px;border-left:2px dashed var(--line)}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}.steps:before{display:none}
+}
+@media(max-width:600px){
+  .nav{gap:8px;padding-block:10px}
+  .menu{display:flex}
+  .nav nav{display:none;order:3;width:100%;margin:0;flex-direction:column;flex-wrap:nowrap;gap:0;padding:6px 0 10px}
+  header.open .nav nav{display:flex}
+  .nav nav a{padding:13px 2px;font-size:18px;border-top:1px solid #2e3080}
+    .nav .btn{margin-left:auto;min-height:40px;padding:0 14px;font-size:15px}
+  .street{height:260px}
+  .svc article{display:grid;grid-template-columns:40px minmax(0,1fr);column-gap:14px;padding:22px 0}
+  .svc svg{width:40px;height:40px;margin:0}
+  .svc article>*:not(svg){grid-column:2}
+  .svc h3{grid-row:1;align-self:center;margin:0}
+  .svc p{margin-top:8px}
+  .steps{gap:22px;margin-top:32px}
+  .steps li{display:grid;grid-template-columns:48px minmax(0,1fr);column-gap:16px}
+  .steps .n{width:48px;height:48px;font-size:20px;margin:0;grid-row:span 2}
+  .steps h3{align-self:center}
+  .steps p{grid-column:2}
+  .prod .body{padding:22px 20px 24px}
+  .prod .shot{padding:14px 14px 0}
+  .prod .go .btn{flex:1 1 140px}
+  .cta .btn{flex:1 1 auto;white-space:nowrap;padding:0 18px}
+  .quote{font-size:24px}
+  .brand{font-size:22px}
+  .hero .wrap{gap:28px}
+  .svc,.steps,.row,  .svc article:nth-child(even){padding-left:0;border-left:0}
+  .street{width:calc(100% + 32px);margin-inline:-16px}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="mk" viewBox="0 0 64 52">
+  <path d="M26.5 9.5Q32 4.5 37.5 9.5M29 13Q32 10.5 35 13" fill="none" stroke="#f4a51c" stroke-width="2.6" stroke-linecap="round"/>
+  <circle cx="32" cy="16.2" r="1.9" fill="#f4a51c"/>
+  <path d="M5 46V27L19 13L32 26L45 13L59 27V46Z" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linejoin="round"/>
+  <path d="M32 26V46" stroke="currentColor" stroke-width="4.5"/>
+  <rect x="13.5" y="28" width="10" height="9" rx="1.5" fill="#f4a51c"/><rect x="40.5" y="28" width="10" height="9" rx="1.5" fill="#f4a51c"/>
+  <path d="M18.5 37V42M45.5 37V42M3 42H61" fill="none" stroke="#e8343d" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#e8343d"><circle cx="3" cy="42" r="2.8"/><circle cx="61" cy="42" r="2.8"/><circle cx="18.5" cy="42" r="2"/><circle cx="45.5" cy="42" r="2"/></g>
+</symbol></svg>
+<header>
+  <div class="nav">
+    <a class="logo brand" href="#top" aria-label="Porshi Tech home"><svg aria-hidden="true"><use href="#mk"/></svg><span>porshi<i>.tech</i></span></a>
+    <nav aria-label="Main" id="mainnav">
+      <a href="#services">Services</a>
+      <a href="#products">Products</a>
+      <a href="#neighbour">Why a neighbour</a>
+      <a href="#process">How we work</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn red" href="#contact">Get in touch</a>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="mainnav" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero" aria-labelledby="h1">
+  <div class="wrap">
+    <div>
+      <p class="logo mark" role="img" aria-label="Porshi Tech"><svg aria-hidden="true"><use href="#mk"/></svg><span>porshi<i>.tech</i></span></p>
+      <p class="meaning"><b>Porshi</b> <em>(por-shee)</em> means <b>neighbour</b> in Bangla. It’s the person next door you trust with a spare key: close by, quick to help, and around for the long haul. That’s the kind of technology partner we set out to be.</p>
+    </div>
+    <div>
+      <h1 id="h1">Enterprise&#8209;grade tech. Neighbourly service.</h1>
+      <p class="lede">Software engineering, data, AI and complete IT services for businesses everywhere, delivered by a Perth-based team that answers the phone, speaks plainly and stays accountable long after go-live.</p>
+      <div class="cta">
+        <a class="btn red" href="#contact">Book a free chat</a>
+        <a class="btn line" href="#services">See what we do</a>
+      </div>
+    </div>
+  </div>
+
+  <svg class="street" viewBox="0 0 1200 360" preserveAspectRatio="xMidYMax slice" role="img" aria-label="A street of houses at dusk, connected to the cloud and to each other by one red data line">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#25277a"/><stop offset="1" stop-color="#3a3c9e"/></linearGradient>
+      <radialGradient id="glow"><stop offset="0" stop-color="#ffd36b" stop-opacity=".55"/><stop offset="1" stop-color="#ffd36b" stop-opacity="0"/></radialGradient>
+      <pattern id="pcb" width="120" height="80" patternUnits="userSpaceOnUse">
+        <path d="M0 20H40L52 32H90M70 0V14L80 24M10 80V60H34L46 48M100 80V62L120 50" fill="none" stroke="#8f93ff" stroke-width="1.4"/>
+        <g fill="#8f93ff"><circle cx="90" cy="32" r="2.6"/><circle cx="80" cy="24" r="2.6"/><circle cx="46" cy="48" r="2.6"/><circle cx="120" cy="50" r="2.6"/></g>
+      </pattern>
+      <symbol id="house" viewBox="0 0 160 200" overflow="visible">
+        <rect x="-8" y="180" width="176" height="20" fill="#000" opacity=".18"/>
+        <polygon points="0,78 80,14 160,78" fill="var(--rf)"/>
+        <polygon points="80,14 160,78 148,78 80,24" fill="#fff" opacity=".18"/>
+        <rect x="14" y="78" width="132" height="110" fill="var(--wl)"/>
+        <rect x="14" y="78" width="132" height="12" fill="#000" opacity=".16"/>
+        <rect x="14" y="78" width="6" height="110" fill="#fff" opacity=".2"/>
+        <rect x="66" y="128" width="28" height="60" rx="2" fill="#16175a"/>
+        <rect x="28" y="110" width="28" height="28" rx="2" fill="#ffd36b"/>
+        <rect x="104" y="110" width="28" height="28" rx="2" fill="#ffd36b"/>
+        <path d="M42 110v28M28 124h28M118 110v28M104 124h28" stroke="var(--wl)" stroke-width="3"/>
+        <rect x="6" y="150" width="148" height="6" fill="var(--rf)"/>
+        <rect x="18" y="156" width="5" height="32" fill="var(--rf)"/><rect x="137" y="156" width="5" height="32" fill="var(--rf)"/>
+      </symbol>
+      <symbol id="gum" viewBox="0 0 120 220" overflow="visible">
+        <path d="M58 220 C56 170 62 140 54 100 M57 150 C70 130 84 124 92 104 M56 128 C42 112 30 108 24 90" stroke="#e9e3d8" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <ellipse cx="56" cy="72" rx="44" ry="36" fill="#3f7a5c"/>
+        <ellipse cx="92" cy="96" rx="26" ry="20" fill="#356b50"/>
+        <ellipse cx="22" cy="88" rx="22" ry="18" fill="#4b8a69"/>
+        <ellipse cx="48" cy="58" rx="22" ry="14" fill="#fff" opacity=".12"/>
+      </symbol>
+    </defs>
+    <rect width="1200" height="360" fill="url(#sky)"/>
+    <rect width="1200" height="300" fill="url(#pcb)" opacity=".16"/>
+    <g fill="none" stroke="#9ea2ff" stroke-width="2" stroke-dasharray="4 6" opacity=".75">
+      <path d="M360 60H190V170"/><path d="M385 96V166"/><path d="M450 60H600V100"/><path d="M500 92H835V160"/><path d="M500 92V60"/>
+    </g>
+    <g fill="#9ea2ff"><circle cx="190" cy="170" r="4"/><circle cx="385" cy="166" r="4"/><circle cx="835" cy="160" r="4"/><circle cx="600" cy="100" r="4"/></g>
+    <g transform="translate(355 30)">
+      <path d="M20 66a22 22 0 0 1 4-43 30 30 0 0 1 56-6 24 24 0 0 1 30 23 22 22 0 0 1-6 26Z" fill="#fff"/>
+      <path d="M24 23a30 30 0 0 1 56-6" fill="none" stroke="#e4e5ff" stroke-width="6"/>
+      <g fill="#25277a"><rect x="40" y="34" width="44" height="7" rx="3.5"/><rect x="40" y="47" width="30" height="7" rx="3.5"/></g>
+      <circle cx="93" cy="50.5" r="4.5" fill="#d7262f"/>
+    </g>
+    <circle cx="1040" cy="70" r="40" fill="#f4a51c"/>
+    <circle cx="1040" cy="70" r="56" fill="none" stroke="#f4a51c" stroke-width="2" stroke-dasharray="6 8" opacity=".7"/>
+    <g fill="#fff" opacity=".7"><circle cx="140" cy="40" r="2"/><circle cx="330" cy="70" r="1.6"/><circle cx="620" cy="30" r="2"/><circle cx="820" cy="60" r="1.4"/><circle cx="900" cy="22" r="1.8"/></g>
+    <path d="M0 300 C200 284 380 296 600 290 S1000 282 1200 296 V360 H0Z" fill="#16175a"/>
+    <use href="#gum" x="-10" y="110" width="120" height="220"/>
+    <use href="#house" x="100" y="128" width="160" height="200" style="--rf:#d7262f;--wl:#f3f3fb"/>
+    <use href="#house" x="300" y="148" width="140" height="175" style="--rf:#16175a;--wl:#f4a51c"/>
+    <ellipse cx="600" cy="230" rx="140" ry="110" fill="url(#glow)"/>
+    <use href="#house" x="500" y="96" width="200" height="250" style="--rf:#d7262f;--wl:#ffffff"/>
+    <use href="#mk" x="578" y="186" width="44" height="36" style="color:#16175a"/>
+    <use href="#house" x="760" y="140" width="150" height="188" style="--rf:#16175a;--wl:#e2e3f7"/>
+    <use href="#house" x="950" y="158" width="130" height="163" style="--rf:#f4a51c;--wl:#f3f3fb"/>
+    <use href="#gum" x="1090" y="120" width="110" height="200"/>
+    <path id="wire" class="thread" d="M0 250 C60 230 110 260 140 255 S220 250 240 255 S320 266 336 268 S400 270 420 268 S520 240 545 236 S640 236 655 236 S770 262 793 260 S860 258 880 260 S960 276 977 273 S1050 272 1065 272 S1150 250 1200 262" fill="none" stroke="#ff3b44" stroke-width="4" stroke-linecap="round"/>
+    <g fill="none" stroke="#f4a51c" stroke-width="4" stroke-linecap="round"><path d="M985 172q15-14 30 0M992 160q8-7 16 0" transform="translate(0 4)"/><path d="M152 142q15-14 30 0" transform="translate(23 -6)"/></g>
+    <g fill="#fff"><circle r="5"><animateMotion dur="6s" repeatCount="indefinite"><mpath href="#wire"/></animateMotion></circle><circle r="5"><animateMotion dur="6s" begin="-2s" repeatCount="indefinite"><mpath href="#wire"/></animateMotion></circle><circle r="5"><animateMotion dur="6s" begin="-4s" repeatCount="indefinite"><mpath href="#wire"/></animateMotion></circle></g>
+    <g fill="#ff3b44"><circle cx="140" cy="255" r="5"/><circle cx="336" cy="268" r="5"/><circle cx="545" cy="236" r="6"/><circle cx="655" cy="236" r="6"/><circle cx="793" cy="260" r="5"/><circle cx="977" cy="273" r="5"/></g>
+  </svg>
+</section>
+<div class="stitch" aria-hidden="true"></div>
+
+<section class="band" id="services" aria-labelledby="sh">
+  <div class="wrap">
+    <h2 id="sh">Everything your business runs on, under one roof</h2>
+    <p class="lede" style="margin-top:16px">Start with one project or hand us the lot. Either way you get the same small team, who know your systems and your name.</p>
+    <div class="svc" id="svc"></div>
+  </div>
+</section>
+
+<div class="stitch" aria-hidden="true"></div>
+<section class="band" id="products" aria-labelledby="prh">
+  <div class="wrap">
+    <h2 id="prh">Products built by Porshi</h2>
+    <p class="lede" style="margin-top:16px">Software we’ve built from real work with Australian organisations, ready to use now and supported by the team that wrote it.</p>
+    <div class="prods" id="prods"></div>
+  </div>
+</section>
+
+<section class="band nb" id="neighbour" aria-labelledby="nh">
+  <div class="wrap">
+    <div>
+      <h2 id="nh">Why we called ourselves the neighbours</h2>
+      <p class="quote">A good neighbour notices when something’s wrong, lends a hand without being asked twice, and is still there next year.</p>
+      <p class="lede" style="margin-top:22px">That’s the standard we hold our work to. No ticket queues to nowhere, no jargon, no vanishing after go-live.</p>
+    </div>
+    <div class="traits" id="traits"></div>
+  </div>
+</section>
+
+<section class="band" id="process" aria-labelledby="ph">
+  <div class="wrap">
+    <h2 id="ph">How a project with us goes</h2>
+    <ol class="steps" id="steps"></ol>
+  </div>
+</section>
+
+<section class="band areas" aria-labelledby="ah">
+  <div class="wrap">
+    <div>
+      <h2 id="ah">Based in Perth. Working anywhere.</h2>
+      <p class="lede" style="margin-top:16px">Our home is Perth, Western Australia, and our clients are wherever business takes them. Across Australia or overseas, we fit our hours to yours.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="faq" aria-labelledby="fh">
+  <div class="wrap">
+    <h2 id="fh">Questions neighbours ask</h2>
+    <div class="faq" id="faqs"></div>
+  </div>
+</section>
+<div class="stitch" aria-hidden="true"></div>
+
+<section class="band contact" id="contact" aria-labelledby="ch">
+  <div class="wrap">
+    <div>
+      <h2 id="ch">Pop over for a chat</h2>
+      <p class="lede" style="margin-top:16px">Tell us what’s bugging you or what you want to build. We’ll reply within one business day with a straight answer, even if that answer is “you don’t need us for this.”</p>
+      <div class="reach">
+        <div><b>Email</b><a href="mailto:hello@porshi.tech">hello@porshi.tech</a></div>
+        <div><b>Website</b>porshi.tech</div>
+        <div><b>Based in</b>Perth, Western Australia</div>
+        <div><b>Hours</b>Monday to Friday, 8am to 6pm AWST, with flexible hours for other time zones</div>
+      </div>
+    </div>
+    <form id="form" novalidate>
+      <div class="row">
+        <label>Your name<input id="f-name" name="name" autocomplete="name" required></label>
+        <label>Business<input id="f-biz" name="business" autocomplete="organization"></label>
+      </div>
+      <div class="row">
+        <label>Email<input id="f-email" name="email" type="email" autocomplete="email" required></label>
+        <label>Phone<input id="f-phone" name="phone" type="tel" autocomplete="tel"></label>
+      </div>
+      <label>What can we help with?
+        <select id="f-topic" name="topic"></select>
+      </label>
+      <label>Tell us a bit more<textarea id="f-msg" name="message" required placeholder="What’s the problem, and what would “fixed” look like?"></textarea></label>
+      <p class="err" id="err" role="alert"></p>
+      <button class="btn red" type="submit">Send message</button>
+      <div class="done" id="done" role="status"></div>
+      <p class="note">Preview only: this form checks your details but isn’t connected to an inbox yet.</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="logo"><svg aria-hidden="true"><use href="#mk"/></svg><span>porshi<i>.tech</i></span></span>
+    <p style="margin:0">Your neighbours in tech, based in Perth: software, data, AI and IT services for businesses everywhere</p>
+    <p style="margin:0">© <span id="yr"></span> Porshi Tech</p>
+  </div>
+</footer>
+
+<script>
+{
+const I={
+ code:'<path d="M16 14 6 24l10 10M32 14l10 10-10 10M27 10l-6 28"/>',
+ pipe:'<path d="M6 12h14v8h8v-8h14M6 36h14v-8M28 28v8h14"/><circle cx="24" cy="24" r="4"/>',
+ chart:'<path d="M6 40h36M12 34V22M20 34V12M28 34V26M36 34V16"/>',
+ ai:'<rect x="10" y="12" width="28" height="24" rx="6"/><path d="M18 22v2M30 22v2M19 30h10M24 6v6M4 24h6M38 24h6"/>',
+ it:'<rect x="6" y="8" width="36" height="24" rx="3"/><path d="M18 40h12M24 32v8M14 20l4 4 8-8"/>',
+ cloud:'<path d="M14 34a8 8 0 0 1-1-16 11 11 0 0 1 21-2 8 8 0 0 1 1 18Z"/><path d="M24 24v10M20 28l4-4 4 4"/>',
+ phone:'<path d="M14 6h8l3 9-5 3a24 24 0 0 0 10 10l3-5 9 3v8a4 4 0 0 1-4 4C21 38 10 27 10 10a4 4 0 0 1 4-4Z"/>',
+ talk:'<path d="M8 10h32v20H22l-9 8v-8H8Z"/><path d="M15 20h18"/>',
+ stay:'<path d="M24 42s-16-9-16-22a9 9 0 0 1 16-5 9 9 0 0 1 16 5c0 13-16 22-16 22Z"/>',
+ pin:'<path d="M24 44s14-14 14-24a14 14 0 0 0-28 0c0 10 14 24 14 24Z"/><circle cx="24" cy="20" r="5"/>'
+};
+const ic=(k,c)=>`<svg viewBox="0 0 48 48" fill="none" stroke="${c||'var(--redtext)'}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
+
+const svc=[
+ ['code','Software development','Web apps, internal tools, customer portals and integrations, built to fit how your team already works.',['Web & mobile','APIs','Legacy rescue']],
+ ['pipe','Data engineering','Pipelines that pull your scattered data into one reliable, tidy place, refreshed on time, every time.',['ETL / ELT','Data warehouses','Cloud migration']],
+ ['chart','Data analysis','Dashboards and reports that answer the questions you actually ask on Monday morning.',['Power BI','Forecasting','KPI reporting']],
+ ['ai','AI & LLM solutions','Practical AI: assistants trained on your documents, automated paperwork, and smart search, with guardrails.',['RAG chatbots','Automation','LLM evaluation']],
+ ['it','Managed IT services','Devices, accounts, email, networks and helpdesk support, looked after so you can stop thinking about them.',['Helpdesk','Microsoft 365','Onboarding']],
+ ['cloud','Cloud & security','Secure, right-sized cloud setups, backups that genuinely restore, and help working toward the Essential Eight.',['AWS & Azure','Backups','Essential Eight']]
+];
+document.getElementById('svc').innerHTML=svc.map(([k,t,d,tags])=>`<article>${ic(k)}<h3>${t}</h3><p>${d}</p><ul>${tags.map(x=>`<li>${x}</li>`).join('')}</ul></article>`).join('');
+
+/* Products: add a new entry to this list to show another product */
+const prods=[
+ {name:'CAMS',full:'Crossover Assessment Management System',tag:'For local councils',url:'https://cams.porshi.tech',pic:'cams',
+  brief:'Takes driveway crossover applications from lodgement to decision. AI reads the site plan, the rules engine checks it, and officers review, inspect and approve in one place.',
+  pts:['AI pulls dimensions, materials and services straight from site plan PDFs','Rule-based checklist against AS 2890.1 and council specifications','Automatic sight-triangle analysis and a map with WA data layers','Mobile field inspections with GPS-tagged photos, PDF reports and a full audit trail']},
+ {name:'Porshi PMS',full:'Property Management System',tag:'For hotels and accommodation',url:'https://pms.porshi.tech/login',pic:'pms',
+  brief:'Runs the day-to-day of a hotel or serviced property, from bookings and check-in to housekeeping and maintenance, in one clear system.',
+  pts:['Reservations, rooms and rates on a single booking calendar','Front desk check-in, check-out and guest records','Housekeeping status updated room by room','Built-in maintenance module to log, assign and track repairs']}
+];
+const pics={
+ cams:`<svg viewBox="0 0 400 200" aria-hidden="true"><rect width="400" height="200" rx="10" fill="#fff"/><rect width="400" height="26" rx="10" fill="#e9e9f7"/><circle cx="16" cy="13" r="4" fill="#d7262f"/><circle cx="30" cy="13" r="4" fill="#f4a51c"/><rect x="0" y="26" width="250" height="174" fill="#eef2ea"/><rect x="0" y="150" width="250" height="34" fill="#c9cbd8"/><path d="M0 167H250" stroke="#fff" stroke-width="2" stroke-dasharray="10 8"/><rect x="60" y="60" width="120" height="64" fill="#fff" stroke="#25277a" stroke-width="2"/><rect x="100" y="124" width="34" height="26" fill="#f4a51c" opacity=".85"/><path d="M100 150 40 150 100 124Z M134 150 200 150 134 124Z" fill="#d7262f" opacity=".28"/><path d="M100 150 40 150 100 124M134 150 200 150 134 124" stroke="#d7262f" stroke-width="1.5" fill="none"/><text x="117" y="141" font-size="9" text-anchor="middle" fill="#16175a" font-family="sans-serif">4.5m</text><g font-family="sans-serif" font-size="11" fill="#16175a"><text x="266" y="50" font-weight="700">Assessment</text><rect x="266" y="62" width="10" height="10" rx="2" fill="#3f7a5c"/><text x="282" y="71">Width</text><rect x="266" y="84" width="10" height="10" rx="2" fill="#3f7a5c"/><text x="282" y="93">Sight lines</text><rect x="266" y="106" width="10" height="10" rx="2" fill="#f4a51c"/><text x="282" y="115">Tree clearance</text><rect x="266" y="128" width="10" height="10" rx="2" fill="#3f7a5c"/><text x="282" y="137">Drainage</text><rect x="266" y="160" width="116" height="24" rx="12" fill="#25277a"/><text x="324" y="176" text-anchor="middle" fill="#fff" font-weight="700">Approve</text></g></svg>`,
+ pms:`<svg viewBox="0 0 400 200" aria-hidden="true"><rect width="400" height="200" rx="10" fill="#fff"/><rect width="400" height="26" rx="10" fill="#e9e9f7"/><circle cx="16" cy="13" r="4" fill="#d7262f"/><circle cx="30" cy="13" r="4" fill="#f4a51c"/><g font-family="sans-serif" font-size="10" fill="#4a4c72">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((d,i)=>`<text x="${84+i*44}" y="44">${d}</text>`).join('')}${[101,102,103,201,202,203].map((r,i)=>`<text x="12" y="${68+i*22}">Room ${r}</text>`).join('')}</g>${[0,1,2,3,4,5].map(i=>`<path d="M70 ${74+i*22}H392" stroke="#e9e9f7"/>`).join('')}<g font-family="sans-serif" font-size="9" fill="#fff"><rect x="78" y="55" width="128" height="16" rx="8" fill="#25277a"/><text x="88" y="66">Nguyen · 3 nights</text><rect x="250" y="55" width="96" height="16" rx="8" fill="#d7262f"/><rect x="122" y="77" width="172" height="16" rx="8" fill="#f4a51c"/><rect x="78" y="99" width="84" height="16" rx="8" fill="#d7262f"/><rect x="206" y="99" width="150" height="16" rx="8" fill="#25277a"/><rect x="166" y="121" width="128" height="16" rx="8" fill="#25277a"/><rect x="78" y="143" width="216" height="16" rx="8" fill="#f4a51c"/><rect x="298" y="165" width="94" height="16" rx="8" fill="#8a8cb8"/><text x="306" y="176">Maintenance</text></g></svg>`
+};
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+document.getElementById('prods').innerHTML=prods.map(p=>`<article class="prod"><div class="shot">${pics[p.pic]||''}</div><div class="body"><span class="tag">${esc(p.tag)}</span><h3>${esc(p.name)}<small>${esc(p.full)}</small></h3><p>${esc(p.brief)}</p><ul>${p.pts.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="go"><a class="btn red" href="${esc(p.url)}">Explore ${esc(p.name)}</a><a class="btn line" href="#contact" data-topic="${esc(p.name)}">Book a demo</a></div></div></article>`).join('');
+
+const traits=[
+ ['phone','You can reach a person','Call or email and talk to someone who knows your setup, not a script.'],
+ ['talk','Plain English, always','We explain options, costs and trade-offs in words that make sense, then let you decide.'],
+ ['pin','Perth-based, Australian standards','A local team on AWST with flexible hours for other time zones, Australian data residency where you need it, and a working knowledge of Australian privacy obligations.'],
+ ['stay','We stay after launch','Support, maintenance and small improvements, so the thing we built keeps earning its keep.']
+];
+document.getElementById('traits').innerHTML=traits.map(([k,t,d])=>`<div>${ic(k)}<div><h3>${t}</h3><p>${d}</p></div></div>`).join('');
+
+const steps=[
+ ['Say hello','A free, no-pressure chat about what’s going on and what good looks like.'],
+ ['Plan it together','A short written plan with scope, timeline and a fixed or capped price.'],
+ ['Build in the open','Working pieces you can see every week or two, so there are no surprises.'],
+ ['Look after it','Handover, training, then ongoing support for as long as you want us.']
+];
+document.getElementById('steps').innerHTML=steps.map(([t,d],i)=>`<li><div class="n">${i+1}</div><h3>${t}</h3><p>${d}</p></li>`).join('');
+
+
+const faqs=[
+ ['Do you only work with Perth businesses?','No. We’re based in Perth and work with clients across Australia and overseas. Location is never a barrier to working with us.'],
+ ['Do you work with small businesses?','Yes. Most of our neighbours are small and medium businesses that need a capable tech partner without hiring a full in-house team.'],
+ ['Can you take over from our current IT provider or developer?','We can. We start with a review of what you have, document it, and plan a calm handover so nothing drops in the gap.'],
+ ['Is AI actually useful for a business our size?','Often, for specific jobs: answering repeat questions, drafting documents, sorting email or pulling data out of PDFs. We’ll tell you honestly where it helps and where it doesn’t.'],
+ ['Where is our data kept?','Wherever suits your obligations. We default to Australian data centres and can design for local data residency.'],
+ ['How do you charge?','Projects get a fixed or capped quote after the planning step. Ongoing IT support is a simple monthly plan. Ad-hoc help is billed hourly.']
+];
+document.getElementById('faqs').innerHTML=faqs.map(([q,a],i)=>`<details${i?'':' open'}><summary>${q}</summary><p>${a}</p></details>`).join('');
+
+const topics=['CAMS demo','Porshi PMS demo','Software development','Data engineering','Data analysis & dashboards','AI & LLM solutions','Managed IT services','Cloud & security','Not sure yet'];
+const sel=document.getElementById('f-topic');
+sel.innerHTML=topics.map(t=>`<option>${t}</option>`).join('');
+
+const form=document.getElementById('form'),err=document.getElementById('err'),done=document.getElementById('done');
+let draft={};try{draft=JSON.parse(localStorage.getItem('porshi-draft')||'{}')}catch(e){}
+for(const el of form.elements){if(el.name&&draft[el.name])el.value=draft[el.name]}
+form.addEventListener('input',()=>{const d={};for(const el of form.elements)if(el.name)d[el.name]=el.value;try{localStorage.setItem('porshi-draft',JSON.stringify(d))}catch(e){}});
+form.addEventListener('submit',e=>{
+  e.preventDefault();
+  const $=id=>document.getElementById(id);const n=$('f-name').value.trim(),m=$('f-email').value.trim(),t=$('f-msg').value.trim();
+  const miss=[];if(!n)miss.push('your name');if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m))miss.push('a valid email');if(!t)miss.push('a short message');
+  if(miss.length){err.textContent='Please add '+miss.join(', ')+'.';(!n?$('f-name'):miss.includes('a valid email')?$('f-email'):$('f-msg')).focus();return}
+  err.textContent='';
+  done.style.display='block';
+  done.textContent='Thanks, '+n+'. Your message is ready to go. Once this form is connected, we’ll reply to '+m+' within one business day.';
+  try{localStorage.removeItem('porshi-draft')}catch(e){}
+});
+document.getElementById('prods').addEventListener('click',e=>{const a=e.target.closest('[data-topic]');if(a)sel.value=a.dataset.topic+' demo'});
+if(matchMedia('(prefers-reduced-motion: reduce)').matches)document.querySelector('.street').pauseAnimations();
+const hd=document.querySelector('header'),mb=document.getElementById('menu');
+mb.addEventListener('click',()=>{const o=hd.classList.toggle('open');mb.setAttribute('aria-expanded',o);mb.setAttribute('aria-label',o?'Close menu':'Open menu')});
+document.getElementById('mainnav').addEventListener('click',e=>{if(e.target.closest('a')){hd.classList.remove('open');mb.setAttribute('aria-expanded','false')}});
+document.getElementById('yr').textContent=new Date().getFullYear();
+}
+</script>
+</body>
+</html>

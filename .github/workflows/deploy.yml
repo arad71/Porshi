@@ -1,0 +1,43 @@
+name: Deploy to Contabo
+
+on:
+  push:
+    branches: [main]
+    paths: ["site/**", "deploy/**", ".github/workflows/deploy.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-porshi-website
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      HOST: ${{ secrets.CONTABO_HOST }}
+      SSH_USER: ${{ secrets.CONTABO_USER || 'root' }}
+      CERT_EMAIL: ${{ secrets.CERT_EMAIL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.CONTABO_SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          printf 'Host contabo\n  HostName %s\n  User %s\n  IdentityFile ~/.ssh/id_deploy\n  IdentitiesOnly yes\n' "$HOST" "$SSH_USER" > ~/.ssh/config
+
+      - name: Upload site
+        run: |
+          ssh contabo "mkdir -p /var/www/porshi.tech"
+          rsync -az --delete --chmod=D755,F644 site/ contabo:/var/www/porshi.tech/
+
+      - name: Configure Nginx and HTTPS (first run only)
+        run: ssh contabo "CERT_EMAIL='$CERT_EMAIL' bash -s" < deploy/setup-server.sh
+
+      - name: Check the site answers
+        run: |
+          sleep 2
+          curl -fsS -o /dev/null -w "porshi.tech answered with HTTP %{http_code}\n" --resolve "porshi.tech:443:$HOST" https://porshi.tech/ \
+            || curl -fsS -o /dev/null -w "porshi.tech answered over HTTP with %{http_code} (HTTPS not set up yet)\n" --resolve "porshi.tech:80:$HOST" http://porshi.tech/
