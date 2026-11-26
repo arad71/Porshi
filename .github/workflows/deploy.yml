@@ -16,12 +16,13 @@ jobs:
     env:
       HOST: ${{ secrets.CONTABO_HOST }}
       SSH_USER: ${{ secrets.CONTABO_USER || 'root' }}
-      CERT_EMAIL: ${{ secrets.CERT_EMAIL }}
+      SITE_PORT: ${{ secrets.SITE_PORT || '8090' }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up SSH key
         run: |
+          [ -n "$HOST" ] || { echo "::error::Add the CONTABO_HOST secret"; exit 1; }
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
           printf '%s\n' "${{ secrets.CONTABO_SSH_KEY }}" > ~/.ssh/id_deploy
           chmod 600 ~/.ssh/id_deploy
@@ -30,14 +31,17 @@ jobs:
 
       - name: Upload site
         run: |
-          ssh contabo "mkdir -p /var/www/porshi.tech"
+          ssh contabo "mkdir -p /var/www/porshi.tech && (command -v rsync >/dev/null || (apt-get update -qq && apt-get install -y -qq rsync))"
           rsync -az --delete --chmod=D755,F644 site/ contabo:/var/www/porshi.tech/
 
-      - name: Configure Nginx and HTTPS (first run only)
-        run: ssh contabo "CERT_EMAIL='$CERT_EMAIL' bash -s" < deploy/setup-server.sh
+      - name: Serve the site and add it to Caddy (first run only)
+        run: ssh contabo "SITE_PORT='$SITE_PORT' bash -s" < deploy/setup-server.sh
 
       - name: Check the site answers
         run: |
-          sleep 2
-          curl -fsS -o /dev/null -w "porshi.tech answered with HTTP %{http_code}\n" --resolve "porshi.tech:443:$HOST" https://porshi.tech/ \
-            || curl -fsS -o /dev/null -w "porshi.tech answered over HTTP with %{http_code} (HTTPS not set up yet)\n" --resolve "porshi.tech:80:$HOST" http://porshi.tech/
+          for i in 1 2 3 4 5 6; do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 10 --resolve "porshi.tech:443:$HOST" https://porshi.tech/ || true)
+            if [ "$code" = "200" ]; then echo "https://porshi.tech is live"; exit 0; fi
+            echo "HTTPS not ready yet (got '$code'), waiting..."; sleep 10
+          done
+          echo "::warning::The site is deployed on the server, but https://porshi.tech is not answering yet. Check that the DNS A records for porshi.tech and www point at $HOST; Caddy gets the certificate as soon as they do."

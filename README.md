@@ -9,9 +9,11 @@ The whole site is one file: `site/index.html`.
 Every push to `main` that changes `site/` deploys to the Contabo server automatically
 (see `.github/workflows/deploy.yml`). You can also run it by hand from the **Actions** tab.
 
-The first run creates the Nginx site for `porshi.tech` and `www.porshi.tech` and, once DNS
-points at the server, a free Let's Encrypt HTTPS certificate. Later runs only upload the files.
-Other sites on the server (pms, cams and so on) are never touched.
+The site is served by a small Nginx container (`porshi-site`, on `127.0.0.1:8090`) and published
+through the server's existing **Caddy**, which also handles HTTPS. The first run appends a
+`porshi.tech` block to the Caddyfile (after backing it up and validating it; if Caddy rejects it,
+the file is restored unchanged). Later runs only upload the files. Other sites in the Caddyfile
+(pms, cams, motors and so on) are never changed. Works with Caddy installed on the system or in Docker.
 
 ### Repository secrets
 
@@ -21,7 +23,7 @@ Settings → Secrets and variables → Actions:
 |---|---|
 | `CONTABO_HOST` | the server's IP address |
 | `CONTABO_SSH_KEY` | the private SSH key GitHub uses to log in |
-| `CERT_EMAIL` | email for Let's Encrypt certificate notices |
+| `SITE_PORT` | optional, defaults to `8090`; change only if that port is taken |
 | `CONTABO_USER` | optional, defaults to `root` |
 
 ### DNS
