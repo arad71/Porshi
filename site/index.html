@@ -417,7 +417,7 @@ document.getElementById('svc').innerHTML=svc.map(([k,t,d,tags])=>`<article>${ic(
 
 /* Products: add a new entry to this list to show another product */
 const prods=[
- {name:'CAMS',full:'Crossover Assessment Management System',tag:'For local councils',url:'https://cams.porshi.tech',pic:'cams',
+ {name:'Porshi CAMS',full:'Crossover Assessment Management System',tag:'For local councils',url:'https://cams.porshi.tech',pic:'cams',
   brief:'Takes driveway crossover applications from lodgement to decision. AI reads the site plan, the rules engine checks it, and officers review, inspect and approve in one place.',
   pts:['AI pulls dimensions, materials and services straight from site plan PDFs','Rule-based checklist against AS 2890.1 and council specifications','Automatic sight-triangle analysis and a map with WA data layers','Mobile field inspections with GPS-tagged photos, PDF reports and a full audit trail']},
  {name:'Porshi PMS',full:'Property Management System',tag:'For hotels and accommodation',url:'https://pms.porshi.tech/login',pic:'pms',
@@ -462,7 +462,7 @@ const faqs=[
 ];
 document.getElementById('faqs').innerHTML=faqs.map(([q,a],i)=>`<details${i?'':' open'}><summary>${q}</summary><p>${a}</p></details>`).join('');
 
-const topics=['CAMS demo','Porshi PMS demo','Porshi Motors demo','Software development','Data engineering','Data analysis & dashboards','AI & LLM solutions','Managed IT services','Cloud & security','Not sure yet'];
+const topics=['Porshi CAMS demo','Porshi PMS demo','Porshi Motors demo','Software development','Data engineering','Data analysis & dashboards','AI & LLM solutions','Managed IT services','Cloud & security','Not sure yet'];
 const sel=document.getElementById('f-topic');
 sel.innerHTML=topics.map(t=>`<option>${t}</option>`).join('');
 
